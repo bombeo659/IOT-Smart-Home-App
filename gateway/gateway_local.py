@@ -3,11 +3,11 @@ import time
 import sys
 from Adafruit_IO import MQTTClient
 
-AIO_FEED_IDS = ["bbc-led", "bbc-pump"]
+AIO_FEED_IDS = ["bk-iot-led", "bk-iot-pump"]
 
 
 AIO_USERNAME = "iotg06"
-AIO_KEY = "aio_Ahdg47azJ796************gmUVqD3LMKJ66cff"
+AIO_KEY = "aio_Ahdg47azJ796-----------------gmUVqD3LMKJ66cff"
 
 
 def connected(client):
@@ -53,7 +53,7 @@ def getPort():
     #     if "ELTIMA Virtual Serial Port" in strPort:
     #         splitPort = strPort.split(" ")
     #         commPort = (splitPort[0])
-    commPort = "COM1"
+    commPort = "COM1"  # hardcode getPort()
     return commPort
 
 
@@ -71,9 +71,9 @@ def processData(data):
     print(splitData)
     try:
         if splitData[0] == "TEMP":
-            client.publish("bbc-temp", splitData[1])
+            client.publish("bk-iot-temp", splitData[1])
         elif splitData[0] == "HUMI":
-            client.publish("bbc-humi", splitData[1])
+            client.publish("bk-iot-humi", splitData[1])
     except:
         pass
 
