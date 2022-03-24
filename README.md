@@ -12,6 +12,5 @@
 
 ![app_signup](https://github.com/bombeo659/dadn-cnpm/blob/main/images/app_1.jpg)
 
-![app_home](https://github.com/bombeo659/dadn-cnpm/blob/main/images/app_2.jpg)
+![app_home](./images/app_2.jpg =x50)
 
-[![app_home](https://github.com/bombeo659/dadn-cnpm/blob/main/images/app_2.jpg)=400x250)](https://github.com/bombeo659/dadn-cnpm/blob/main/images/app_2.jpg)
