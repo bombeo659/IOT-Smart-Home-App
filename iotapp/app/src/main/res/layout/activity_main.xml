@@ -243,8 +243,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/background_home"
         android:fitsSystemWindows="true"
-        android:visibility="gone
-">
+        android:visibility="gone">
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/task_name"

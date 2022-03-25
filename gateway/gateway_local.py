@@ -7,7 +7,7 @@ AIO_FEED_IDS = ["bk-iot-led", "bk-iot-pump"]
 
 
 AIO_USERNAME = "iotg06"
-AIO_KEY = "aio_Ahdg47azJ796gmU------------------VqD3LMKJ66cff"
+AIO_KEY = "aio_Ahdg47azJ796gmU-------------VqD3LMKJ66cff"
 
 
 def connected(client):
@@ -26,9 +26,10 @@ def disconnected(client):
 
 
 def message(client, feed_id, payload):
-    print("Nhan du lieu: " + payload)
+    print("Nhan du lieu tu " + feed_id + ": " + payload)
     if isMicrobitConnected:
-        ser.write((str(payload) + "#").encode())
+        ser.write(("feed: " + feed_id + " send: " +
+                  str(payload) + "#\n").encode())
 
 
 client = MQTTClient(AIO_USERNAME, AIO_KEY)

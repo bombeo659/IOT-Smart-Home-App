@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
@@ -19,9 +17,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
     MQTTHelper mqttHelper;
@@ -75,6 +83,10 @@ public class MainActivity extends AppCompatActivity {
                         clearLoginData();
                     }
                     if(username.toString().equals(userLogin) && pass.toString().equals(passLogin)){
+                        getLastValue_Temp();
+                        getLastValue_Humi();
+                        getLastValue_Led();
+                        getLastValue_Pump();
                         Home.setVisibility(View.VISIBLE);
                         Login.setVisibility(View.GONE);
                         Toast.makeText(MainActivity.this, "Logged in successfully", Toast.LENGTH_LONG).show();
@@ -112,21 +124,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if(isChecked){
-                signIn.setVisibility(buttonView.INVISIBLE);
-                cbRemember.setVisibility(buttonView.INVISIBLE);
-                textForgot.setVisibility(buttonView.INVISIBLE);
-                imgPhone.setVisibility(buttonView.VISIBLE);
-                textPhone.setVisibility(buttonView.VISIBLE);
-                phone.setVisibility(buttonView.VISIBLE);
-                signUp.setVisibility(buttonView.VISIBLE);
+                user.setText("");
+                password.setText("");
+                cbRemember.setChecked(false);
+                signIn.setVisibility(View.INVISIBLE);
+                cbRemember.setVisibility(View.INVISIBLE);
+                textForgot.setVisibility(View.INVISIBLE);
+                imgPhone.setVisibility(View.VISIBLE);
+                textPhone.setVisibility(View.VISIBLE);
+                phone.setVisibility(View.VISIBLE);
+                signUp.setVisibility(View.VISIBLE);
             } else{
-                signIn.setVisibility(buttonView.VISIBLE);
-                cbRemember.setVisibility(buttonView.VISIBLE);
-                textForgot.setVisibility(buttonView.VISIBLE);
-                imgPhone.setVisibility(buttonView.INVISIBLE);
-                textPhone.setVisibility(buttonView.INVISIBLE);
-                phone.setVisibility(buttonView.INVISIBLE);
-                signUp.setVisibility(buttonView.INVISIBLE);
+                signIn.setVisibility(View.VISIBLE);
+                cbRemember.setVisibility(View.VISIBLE);
+                textForgot.setVisibility(View.VISIBLE);
+                imgPhone.setVisibility(View.INVISIBLE);
+                textPhone.setVisibility(View.INVISIBLE);
+                phone.setVisibility(View.INVISIBLE);
+                signUp.setVisibility(View.INVISIBLE);
             }
             }
         });
@@ -229,17 +244,13 @@ public class MainActivity extends AppCompatActivity {
         mqttHelper = new MQTTHelper(getApplicationContext(), "nqt");
         mqttHelper.setCallback(new MqttCallbackExtended() {
             @Override
-            public void connectComplete(boolean reconnect, String serverURI) {
-
-            }
+            public void connectComplete(boolean reconnect, String serverURI) {}
 
             @Override
-            public void connectionLost(Throwable cause) {
-
-            }
+            public void connectionLost(Throwable cause) {}
 
             @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
+            public void messageArrived(String topic, MqttMessage message){
                 if(topic.contains("bk-iot-temp")){
                     data_temp.setText(message.toString());
                     int temp = Integer.parseInt(message.toString());
@@ -274,9 +285,139 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void deliveryComplete(IMqttDeliveryToken token) {
+            public void deliveryComplete(IMqttDeliveryToken token) {}
+        });
+    }
 
+    private void getLastValue_Temp(){
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+        String url = "https://io.adafruit.com/api/v2/iotg06/feeds/bk-iot-temp/data?limit=1";
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    JSONObject info = response.getJSONObject(0);
+                    data_temp.setText(info.getString("value"));
+                    int temp = Integer.parseInt(info.getString("value"));
+                    if(temp > 28){
+                        data_temp_check.setText("Hot");
+                        data_temp_check.setTextColor(Color.RED);
+                    }
+                    else if(temp < 24){
+                        data_temp_check.setText("Cold");
+                        data_temp_check.setTextColor(Color.RED);
+                    }else{
+                        data_temp_check.setText("Normal");
+                        data_temp_check.setTextColor(Color.BLACK);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
             }
         });
+        queue.add(request);
+    }
+
+    private void getLastValue_Humi(){
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+        String url = "https://io.adafruit.com/api/v2/iotg06/feeds/bk-iot-humi/data?limit=1";
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    JSONObject info = response.getJSONObject(0);
+                    data_humi.setText(info.getString("value"));
+                    int humidity = Integer.parseInt(info.getString("value"));
+                    if(humidity > 70){
+                        data_humi_check.setText("Humid air");
+                        data_humi_check.setTextColor(Color.RED);
+                    }
+                    else if(humidity < 40){
+                        data_humi_check.setText("Dry air");
+                        data_humi_check.setTextColor(Color.RED);
+                    }else{
+                        data_humi_check.setText("Normal");
+                        data_humi_check.setTextColor(Color.BLACK);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+            }
+        });
+        queue.add(request);
+    }
+
+    private void getLastValue_Led(){
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+        String url = "https://io.adafruit.com/api/v2/iotg06/feeds/bk-iot-led/data?limit=1";
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    JSONObject info = response.getJSONObject(0);
+                    if(info.getString("value").equals("1")){
+                        switch_led.setChecked(true);
+                        led_image.setImageDrawable(getDrawable(R.drawable.ic_led_on));
+                    } else{
+                        switch_led.setChecked(false);
+                        led_image.setImageDrawable(getDrawable(R.drawable.ic_led_off));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+            }
+        });
+        queue.add(request);
+    }
+
+    private void getLastValue_Pump(){
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+        String url = "https://io.adafruit.com/api/v2/iotg06/feeds/bk-iot-pump/data?limit=1";
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    JSONObject info = response.getJSONObject(0);
+                    if(info.getString("value").equals("1")){
+                        switch_pump.setChecked(true);
+                        pump_image.setImageDrawable(getDrawable(R.drawable.ic_motor_on));
+                    } else{
+                        switch_pump.setChecked(false);
+                        pump_image.setImageDrawable(getDrawable(R.drawable.ic_motor_off));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+            }
+        });
+        queue.add(request);
     }
 }
