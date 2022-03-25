@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/androidapp/app/src/main/res/drawable/background_main.xml" value="0.1" />
+        <entry key="..\:/androidapp/app/src/main/res/drawable/btn_view.xml" value="0.1" />
+        <entry key="..\:/androidapp/app/src/main/res/drawable/edit_text_box.xml" value="0.1" />
+        <entry key="..\:/androidapp/app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.1" />
+        <entry key="..\:/androidapp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
+        <entry key="..\:/androidapp/app/src/main/res/drawable/ic_lock.xml" value="0.1" />
+        <entry key="..\:/androidapp/app/src/main/res/drawable/logo.xml" value="0.1" />
+        <entry key="..\:/androidapp/app/src/main/res/layout/activity_final_page.xml" value="0.1" />
+        <entry key="..\:/androidapp/app/src/main/res/layout/activity_login.xml" value="0.1" />
+        <entry key="..\:/androidapp/app/src/main/res/layout/activity_main.xml" value="0.15806159420289856" />
+        <entry key="..\:/androidapp/app/src/main/res/layout/activity_sign_up.xml" value="0.1" />
+        <entry key="..\:/androidapp/app/src/main/res/layout/toolbar.xml" value="0.1" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
