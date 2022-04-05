@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +29,6 @@ import org.json.JSONObject;
 public class HomeScreen extends AppCompatActivity {
 
     MQTTHelper mqttHelper;
-    private Button logout;
     private TextView data_temp, data_temp_check, data_humi, data_humi_check;
     private SwitchCompat switch_led, switch_pump;
     private ImageView led_image, pump_image;
@@ -38,14 +38,8 @@ public class HomeScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
 
-        logout = findViewById(R.id.logout_btn);
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(HomeScreen.this, MainActivity.class));
-            }
-        });
+        Button logout = findViewById(R.id.logout_btn);
+
         data_temp = findViewById(R.id.data_temp);
         data_temp_check = findViewById(R.id.data_temp_check);
         data_humi = findViewById(R.id.data_humidity);
@@ -60,6 +54,38 @@ public class HomeScreen extends AppCompatActivity {
         getLastValue_Humi();
         getLastValue_Led();
         getLastValue_Pump();
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(HomeScreen.this, MainActivity.class));
+            }
+        });
+        switch_led.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    mqttHelper.publishToTopic("iotg06/feeds/bk-iot-led", "1");
+                    led_image.setImageDrawable(getDrawable(R.drawable.ic_led_on));
+                }else {
+                    mqttHelper.publishToTopic("iotg06/feeds/bk-iot-led", "0");
+                    led_image.setImageDrawable(getDrawable(R.drawable.ic_led_off));
+                }
+            }
+        });
+        switch_pump.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    mqttHelper.publishToTopic("iotg06/feeds/bk-iot-pump", "3");
+                    pump_image.setImageDrawable(getDrawable(R.drawable.ic_motor_on));
+                }else {
+                    mqttHelper.publishToTopic("iotg06/feeds/bk-iot-pump", "2");
+                    pump_image.setImageDrawable(getDrawable(R.drawable.ic_motor_off));
+                }
+            }
+        });
     }
 
     private void StartMQTT(){
@@ -67,7 +93,7 @@ public class HomeScreen extends AppCompatActivity {
         mqttHelper.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {
-
+                Toast.makeText(HomeScreen.this, "Connect", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -205,7 +231,7 @@ public class HomeScreen extends AppCompatActivity {
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
             try {
                 JSONObject info = response.getJSONObject(0);
-                if(info.getString("value").equals("1")){
+                if(info.getString("value").equals("3")){
                     switch_pump.setChecked(true);
                     pump_image.setImageDrawable(getDrawable(R.drawable.ic_motor_on));
                 } else{

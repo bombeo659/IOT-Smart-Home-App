@@ -28,8 +28,9 @@ def disconnected(client):
 def message(client, feed_id, payload):
     print("Nhan du lieu tu " + feed_id + ": " + payload)
     if isMicrobitConnected:
-        ser.write(("feed: " + feed_id + " send: " +
-                  str(payload) + "#\n").encode())
+        # ser.write(("feed: " + feed_id + " send: " +
+        #           str(payload) + "#\n").encode())
+        ser.write((str(payload) + "#").encode())
 
 
 client = MQTTClient(AIO_USERNAME, AIO_KEY)
@@ -42,19 +43,16 @@ client.loop_background()
 
 
 def getPort():
-    # ports = serial.tools.list_ports.comports()
-    # print(ports)
-    # N = len(ports)
-    # commPort = "None"
-    # for i in range(0, N):
-    #     port = ports[i]
-    #     strPort = str(port)
-    #     print(strPort)
-    #     # if "USB Serial Device" in strPort:
-    #     if "ELTIMA Virtual Serial Port" in strPort:
-    #         splitPort = strPort.split(" ")
-    #         commPort = (splitPort[0])
-    commPort = "COM1"  # hardcode getPort()
+    ports = serial.tools.list_ports.comports()
+    N = len(ports)
+    commPort = "None"
+    for i in range(0, N):
+        port = ports[i]
+        strPort = str(port)
+        if "USB Serial Device" in strPort:
+            #     if "ELTIMA Virtual Serial Port" in strPort:
+            splitPort = strPort.split(" ")
+            commPort = (splitPort[0])
     return commPort
 
 
@@ -66,6 +64,7 @@ if getPort() != "None":
 
 
 def processData(data):
+    print(data)
     data = data.replace("!", "")
     data = data.replace("#", "")
     splitData = data.split(":")
