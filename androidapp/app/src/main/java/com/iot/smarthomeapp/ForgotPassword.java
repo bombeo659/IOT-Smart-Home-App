@@ -17,12 +17,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class ForgotPassword extends AppCompatActivity {
+public class ForgotPassword extends AppCompatActivity implements View.OnClickListener{
 
     private EditText emailReset;
-    private Button resetPasswordButton;
     private ProgressBar progressBar;
-    private TextView loginText;
 
     private FirebaseAuth auth;
 
@@ -31,25 +29,29 @@ public class ForgotPassword extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
 
-        emailReset = (EditText) findViewById(R.id.email);
-        resetPasswordButton = (Button) findViewById(R.id.resetPasswordButton);
+        emailReset = (EditText) findViewById(R.id.resetEmail);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        loginText = (TextView) findViewById(R.id.loginText);
-        loginText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(ForgotPassword.this, MainActivity.class));
-            }
-        });
+
+        Button resetPasswordButton = (Button) findViewById(R.id.resetPasswordButton);
+        resetPasswordButton.setOnClickListener(this);
+
+        TextView loginText = (TextView) findViewById(R.id.resetLoginReturn);
+        loginText.setOnClickListener(this);
 
         auth = FirebaseAuth.getInstance();
+    }
 
-        resetPasswordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                resetPassword();
-            }
-        });
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+        case R.id.resetLoginReturn:
+            super.onBackPressed();
+            break;
+
+        case R.id.resetPasswordButton:
+            resetPassword();
+            break;
+        }
     }
 
     private void resetPassword(){

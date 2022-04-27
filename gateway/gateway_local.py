@@ -30,7 +30,7 @@ def message(client, feed_id, payload):
     if isMicrobitConnected:
         # ser.write(("feed: " + feed_id + " send: " +
         #           str(payload) + "#\n").encode())
-        ser.write((str(payload) + "#").encode())
+        ser.write((str(payload) + "#\n").encode())
 
 
 client = MQTTClient(AIO_USERNAME, AIO_KEY)
@@ -49,8 +49,8 @@ def getPort():
     for i in range(0, N):
         port = ports[i]
         strPort = str(port)
-        if "USB Serial Device" in strPort:
-            #     if "ELTIMA Virtual Serial Port" in strPort:
+        # if "USB Serial Device" in strPort:
+        if "ELTIMA Virtual Serial Port" in strPort:
             splitPort = strPort.split(" ")
             commPort = (splitPort[0])
     return commPort
@@ -64,7 +64,6 @@ if getPort() != "None":
 
 
 def processData(data):
-    print(data)
     data = data.replace("!", "")
     data = data.replace("#", "")
     splitData = data.split(":")

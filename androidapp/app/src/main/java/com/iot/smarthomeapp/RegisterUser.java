@@ -38,6 +38,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
 
         Button signUpButton = (Button) findViewById(R.id.signupButton);
         signUpButton.setOnClickListener(this);
+
         editTextFullName = (EditText) findViewById(R.id.fullName);
         editTextPhoneNumber = (EditText) findViewById(R.id.phoneNumber);
         editTextEmail = (EditText) findViewById(R.id.email);
@@ -49,13 +50,13 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.loginText:
-                startActivity(new Intent(this, MainActivity.class));
-                break;
+        case R.id.loginText:
+            super.onBackPressed();
+            break;
 
-            case R.id.signupButton:
-                registerUser();
-                break;
+        case R.id.signupButton:
+            registerUser();
+            break;
         }
     }
 
