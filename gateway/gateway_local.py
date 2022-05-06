@@ -73,6 +73,8 @@ def processData(data):
             client.publish("bk-iot-temp", splitData[1])
         elif splitData[0] == "HUMI":
             client.publish("bk-iot-humi", splitData[1])
+        elif splitData[0] == "GAS":
+            client.publish("bk-iot-gas", splitData[1])
     except:
         pass
 

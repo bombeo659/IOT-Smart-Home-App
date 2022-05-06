@@ -13,4 +13,13 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="nav_logout">Logout</string>
+    <string name="off">OFF</string>
+    <string name="on">ON</string>
+    <string name="_0">0</string>
+    <string name="loading">Loading...</string>
+    <string name="gas_concentration">GAS \n CONCENTRATION</string>
+    <string name="living_room">LIVING ROOM</string>
+    <string name="dining_room">DINING ROOM</string>
+    <string name="bathroom">BATHROOM</string>
+    <string name="bedroom">BEDROOM</string>
 </resources>
