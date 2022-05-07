@@ -7,7 +7,7 @@ AIO_FEED_IDS = ["bk-iot-led", "bk-iot-pump"]
 
 
 AIO_USERNAME = "iotg06"
-AIO_KEY = "aio_hLHC61nzorm9A-----------------------AbtSVZeMLtpGBbz"
+AIO_KEY = "aio_hLHC61nzorm9AAbtSVZeMLtpGBbz"
 
 
 def connected(client):

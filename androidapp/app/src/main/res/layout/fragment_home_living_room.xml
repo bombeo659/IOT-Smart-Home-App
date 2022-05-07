@@ -11,14 +11,31 @@
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:orientation="vertical">
-        <ImageView
-            android:id="@+id/back"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_back"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/_0"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/toolbar">
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_back"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/_0"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:layout_constraintStart_toEndOf="@id/back"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/back"
+                app:layout_constraintBottom_toBottomOf="@id/back"
+                android:text="@string/living_room"
+                android:fontFamily="@font/baloo_bhaijaan"
+                android:textSize="25sp"
+                android:textColor="#ffffff"
+                android:gravity="center"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <GridLayout
             android:id="@+id/grid_2"
@@ -27,9 +44,9 @@
             android:columnCount="1"
             android:columnOrderPreserved="false"
             android:layout_marginTop="50dp"
-            app:layout_constraintStart_toStartOf="@id/back"
+            app:layout_constraintStart_toStartOf="@id/toolbar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/back">
+            app:layout_constraintTop_toTopOf="@+id/toolbar">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -144,6 +161,11 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
         </GridLayout>
+
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 </FrameLayout>
