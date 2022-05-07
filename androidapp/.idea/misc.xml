@@ -10,19 +10,12 @@
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/custom_btn.xml" value="0.127" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/custom_input.xml" value="0.127" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/custom_login_btn.xml" value="0.1575" />
-        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/custom_progressbar_drawable.xml" value="0.176" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/custom_txt.xml" value="0.127" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/custom_txt_foot.xml" value="0.1575" />
-        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_account.xml" value="0.1735" />
-        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_bathroom.xml" value="0.1635" />
-        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_bedroom.xml" value="0.1635" />
-        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_devices.xml" value="0.1735" />
-        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_diningroom.xml" value="0.1635" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_humidity.xml" value="0.1575" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1575" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_led_off.xml" value="0.1575" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_led_on.xml" value="0.1575" />
-        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_livingroom.xml" value="0.1635" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_logout.xml" value="0.1575" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_phone.xml" value="0.1575" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_temp.xml" value="0.1575" />
@@ -35,20 +28,20 @@
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/sw_track.xml" value="0.1575" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/sw_track1.xml" value="0.1575" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/activity_forgot_password.xml" value="0.19453125" />
-        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/activity_home_navigation.xml" value="0.17291666666666666" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/activity_home_screen.xml" value="0.183984375" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/activity_register_user.xml" value="0.2" />
-        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/fragment_account.xml" value="0.17291666666666666" />
-        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/fragment_change_password.xml" value="0.17291666666666666" />
-        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/fragment_home.xml" value="0.17291666666666666" />
-        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/fragment_home_bathroom.xml" value="0.17291666666666666" />
-        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/fragment_home_bedroom.xml" value="0.17291666666666666" />
-        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/fragment_home_dining_room.xml" value="0.17291666666666666" />
-        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/fragment_home_living_room.xml" value="0.17291666666666666" />
-        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/fragment_setting.xml" value="0.17291666666666666" />
-        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/layout_header_nav.xml" value="0.17291666666666666" />
-        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/menu/menu_nav.xml" value="0.17291666666666666" />
+        <entry key="..\:/dadn-cnpm/androidapp/app/src/main/res/drawable/background_home.xml" value="0.1935" />
+        <entry key="..\:/dadn-cnpm/androidapp/app/src/main/res/drawable/circle.xml" value="0.1935" />
+        <entry key="..\:/dadn-cnpm/androidapp/app/src/main/res/drawable/custom_bar.xml" value="0.1935" />
+        <entry key="..\:/dadn-cnpm/androidapp/app/src/main/res/drawable/custom_btn.xml" value="0.1935" />
+        <entry key="..\:/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_facebook_login_background.xml" value="0.1935" />
+        <entry key="..\:/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_google_logo.xml" value="0.113" />
+        <entry key="..\:/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_phone.xml" value="0.1935" />
+        <entry key="..\:/dadn-cnpm/androidapp/app/src/main/res/layout/activity_forgot_password.xml" value="0.16847826086956522" />
+        <entry key="..\:/dadn-cnpm/androidapp/app/src/main/res/layout/activity_home_screen.xml" value="0.16847826086956522" />
+        <entry key="..\:/dadn-cnpm/androidapp/app/src/main/res/layout/activity_main.xml" value="0.16" />
+        <entry key="..\:/dadn-cnpm/androidapp/app/src/main/res/mipmap-anydpi-v26/ic_facebook_login.xml" value="0.1" />
       </map>
     </option>
   </component>

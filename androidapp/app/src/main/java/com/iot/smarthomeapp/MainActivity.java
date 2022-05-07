@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -18,13 +20,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import io.paperdb.Paper;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText editTextEmail, editTextPassword;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
-
+    private CheckBox checkbox;
     private long backPressedTime;
     private Toast backToast;
 
@@ -45,9 +52,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button loginButton = (Button) findViewById(R.id.loginButton);
         loginButton.setOnClickListener(this);
 
+        checkbox = (CheckBox) findViewById(R.id.checkBox);
+        Paper.init(this);
+
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         auth = FirebaseAuth.getInstance();
+
+        String UserEmailKey = Paper.book().read(CurrentUser.UserEmailKey);
+        String UserPasswordKey = Paper.book().read(CurrentUser.UserPasswordKey);
+        if(UserEmailKey != null && UserPasswordKey != null) {
+            progressBar.setVisibility(View.VISIBLE);
+            AllowAccessToAccount(UserEmailKey, UserPasswordKey);
+        }
     }
 
     @Override
@@ -106,6 +123,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         progressBar.setVisibility(View.VISIBLE);
+        Log.w("check", email+password);
+//        if (checkbox.isChecked()) {
+//            Paper.book().write(CurrentUser.UserEmailKey, email);
+//            Paper.book().write(CurrentUser.UserPasswordKey, password);
+//        }
+//        String UserEmailKey = Paper.book().read(CurrentUser.UserEmailKey);
+//        String UserPasswordKey = Paper.book().read(CurrentUser.UserPasswordKey);
+//        Log.w("check", CurrentUser.UserEmailKey + CurrentUser.UserPasswordKey);
 
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -114,6 +139,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                     if (user.isEmailVerified()){
+                        Paper.book().write(CurrentUser.UserEmailKey, email);
+                        Paper.book().write(CurrentUser.UserPasswordKey, password);
                         startActivity(new Intent(MainActivity.this, HomeNavigation.class));
                     }else{
                         user.sendEmailVerification();
@@ -125,5 +152,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 progressBar.setVisibility(View.GONE);
             }
         });
+
+
+
     }
+    private void AllowAccessToAccount(final String email, final String password) {
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    startActivity(new Intent(MainActivity.this, HomeNavigation.class));
+                }else{
+                    Toast.makeText(MainActivity.this, "Failed to login! Please check your credentials!", Toast.LENGTH_LONG).show();
+                }
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+
+        Log.w("checkkk", email + password);
+    }
+
+//    public void deletePaper() {
+//        Paper.book().destroy();
+//    }
 }

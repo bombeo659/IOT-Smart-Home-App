@@ -1,5 +1,5 @@
 package com.iot.smarthomeapp;
-
+import com.iot.smarthomeapp.MainActivity;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -139,7 +139,10 @@ public class HomeNavigation extends AppCompatActivity implements NavigationView.
             break;
         case R.id.nav_logout:
             FirebaseAuth.getInstance().signOut();
+//            MainActivity mainActivity = new MainActivity();
+//            mainActivity.deletePaper();
             startActivity(new Intent(HomeNavigation.this, MainActivity.class));
+
             break;
         default:
             replaceFragment(new HomeFragment());
