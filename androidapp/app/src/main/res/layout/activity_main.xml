@@ -22,12 +22,12 @@
         android:id="@+id/login_cap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/black_ops_one"
         android:gravity="center"
         android:text="SMART HOME APP"
         android:textColor="#100230"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:fontFamily="@font/black_ops_one"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/login_logo" />
@@ -36,9 +36,9 @@
         android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginEnd="50dp"
         android:layout_marginStart="50dp"
         android:layout_marginTop="80dp"
+        android:layout_marginEnd="50dp"
         android:background="@drawable/custom_input"
         android:ems="10"
         android:hint="Email Address"
@@ -54,9 +54,9 @@
         android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginEnd="50dp"
         android:layout_marginStart="50dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="50dp"
         android:background="@drawable/custom_input"
         android:ems="10"
         android:hint="Password"
@@ -72,8 +72,9 @@
         android:id="@+id/register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:text="Register"
+        android:layout_marginTop="108dp"
+        android:layout_marginEnd="8dp"
+        android:text="Register now"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/password"
@@ -83,8 +84,8 @@
         android:id="@+id/forgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="256dp"
+        android:layout_marginTop="20dp"
         android:text="Forgot?"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -94,7 +95,7 @@
     <Button
         android:id="@+id/loginButton"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
         android:layout_marginTop="60dp"
         android:background="@drawable/custom_login_btn"
         android:text="Login"
@@ -111,10 +112,63 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:textSize="16sp"
+        android:text="Remember me"
+        android:checked="false"
+        app:layout_constraintStart_toStartOf="@+id/email"
+        app:layout_constraintTop_toTopOf="@+id/password" />
+
+    <TextView
+        android:id="@+id/Donothaveanaccount"
+        android:layout_width="132dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="190dp"
+        android:layout_marginEnd="100dp"
+        android:textSize="16sp"
+        android:text="Don't have an account?"
+        app:layout_constraintEnd_toStartOf="@+id/register"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/password"
+        app:layout_constraintTop_toBottomOf="@+id/email" />
+
+    <TextView
+        android:id="@+id/quick_sign_in"
+        android:layout_width="312dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="248dp"
+        android:text="Or sign in with"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/password"
+        app:layout_constraintTop_toBottomOf="@+id/email" />
+
+    <ImageView
+        android:id="@+id/Google_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        app:layout_constraintStart_toStartOf="@+id/quick_sign_in"
+        app:layout_constraintTop_toBottomOf="@+id/quick_sign_in"
+        app:srcCompat="@drawable/common_google_signin_btn_icon_light_focused" />
+
+    <ImageView
+        android:id="@+id/Facebook_login"
+        android:layout_width="58dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="1dp"
+        app:layout_constraintEnd_toEndOf="@+id/quick_sign_in"
+        app:layout_constraintTop_toBottomOf="@+id/quick_sign_in"
+        app:srcCompat="@mipmap/ic_facebook_login_foreground" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

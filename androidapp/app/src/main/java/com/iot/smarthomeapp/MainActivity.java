@@ -3,37 +3,46 @@ package com.iot.smarthomeapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.text.TextUtils;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.iot.smarthomeapp.Prevalent;
+import com.iot.smarthomeapp.User;
+import io.paperdb.Paper;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText editTextEmail, editTextPassword;
     private TextView textViewRegister, textViewForgot;
     private Button loginButton;
-
+    private CheckBox checkbox;
     private ProgressBar progressBar;
-
+    private ProgressDialog loadingBar;
     private FirebaseAuth auth;
-
+    private String parentDbName = "Users";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         editTextEmail = (EditText) findViewById(R.id.email);
         editTextPassword = (EditText) findViewById(R.id.password);
         textViewRegister = (TextView) findViewById(R.id.register);
@@ -42,7 +51,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         textViewForgot.setOnClickListener(this);
         loginButton = (Button) findViewById(R.id.loginButton);
         loginButton.setOnClickListener(this);
-
+        loadingBar = new ProgressDialog(this);
+        checkbox = (CheckBox) findViewById(R.id.checkBox);
+        Paper.init(this);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         auth = FirebaseAuth.getInstance();
@@ -61,6 +72,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.loginButton:
                 loginUser();
                 break;
+            case R.id.checkBox:
+                autoLoginUser();
+                break;
         }
     }
 
@@ -73,24 +87,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             editTextEmail.requestFocus();
             return;
         }
-        if (!Patterns. EMAIL_ADDRESS.matcher(email).matches ()) {
+        else if (!Patterns. EMAIL_ADDRESS.matcher(email).matches ()) {
             editTextEmail.setError("Please provide valid email");
             editTextEmail.requestFocus();
             return;
         }
 
-        if (password.isEmpty()){
+        else if (password.isEmpty()){
             editTextPassword.setError("Password is required!");
             editTextPassword.requestFocus();
             return;
         }
 
-        if (password.length() < 6){
+        else if (password.length() < 6){
             editTextPassword.setError("Min password length should be 6 characters!");
             editTextPassword.requestFocus();
             return;
         }
-
         progressBar.setVisibility(View.VISIBLE);
 
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -112,6 +125,86 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+    }
+    private void autoLoginUser() {
+        String email = editTextEmail.getText().toString();
+        String password = editTextPassword.getText().toString();
+
+        if (TextUtils.isEmpty(email))
+        {
+            Toast.makeText(this, "Please write your phone number...", Toast.LENGTH_SHORT).show();
+        }
+        else if (TextUtils.isEmpty(password))
+        {
+            Toast.makeText(this, "Please write your password...", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            loadingBar.setTitle("Login Account");
+            loadingBar.setMessage("Please wait, while we are checking the credentials.");
+            loadingBar.setCanceledOnTouchOutside(false);
+            loadingBar.show();
+
+
+            AllowAccessToAccount(email, password);
+        }
+    }
+    private void AllowAccessToAccount (final String p_email, final String p_password) {
+        if(checkbox.isChecked()) {
+            Paper.book().write(Prevalent.UserEmail, p_email);
+            Paper.book().write(Prevalent.UserPassword, p_password);
+        }
+        final DatabaseReference RootRef;
+        RootRef = FirebaseDatabase.getInstance().getReference();
+        RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                if (dataSnapshot.child(parentDbName).child(p_email).exists())
+                {
+                    User usersData = dataSnapshot.child(parentDbName).child(p_email).getValue(User.class);
+
+                    if (usersData.getEmail().equals(p_email))
+                    {
+                        if (usersData.getPassword().equals(p_password))
+                        {
+                            if (parentDbName.equals("Admins"))
+                            {
+                                Toast.makeText(MainActivity.this, "Welcome Admin, you are logged in Successfully...", Toast.LENGTH_SHORT).show();
+                                loadingBar.dismiss();
+
+                                Intent intent = new Intent(MainActivity.this, HomeScreen.class);
+                                startActivity(intent);
+                            }
+                            else if (parentDbName.equals("Users"))
+                            {
+                                Toast.makeText(MainActivity.this, "logged in Successfully...", Toast.LENGTH_SHORT).show();
+                                loadingBar.dismiss();
+
+                                Intent intent = new Intent(MainActivity.this, HomeScreen.class);
+                                Prevalent.currentOnlineUser = usersData;
+                                startActivity(intent);
+                            }
+                        }
+                        else
+                        {
+                            loadingBar.dismiss();
+                            Toast.makeText(MainActivity.this, "Password is incorrect.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                else
+                {
+                    Toast.makeText(MainActivity.this, "Account with this " + p_email + " do not exists.", Toast.LENGTH_SHORT).show();
+                    loadingBar.dismiss();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }
 //        InitMapping();

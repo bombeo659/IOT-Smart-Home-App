@@ -31,6 +31,16 @@
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/activity_home_screen.xml" value="0.183984375" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/activity_register_user.xml" value="0.2" />
+        <entry key="..\:/dadn-cnpm/androidapp/app/src/main/res/drawable/background_home.xml" value="0.1935" />
+        <entry key="..\:/dadn-cnpm/androidapp/app/src/main/res/drawable/circle.xml" value="0.1935" />
+        <entry key="..\:/dadn-cnpm/androidapp/app/src/main/res/drawable/custom_bar.xml" value="0.1935" />
+        <entry key="..\:/dadn-cnpm/androidapp/app/src/main/res/drawable/custom_btn.xml" value="0.1935" />
+        <entry key="..\:/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_facebook_login_background.xml" value="0.1935" />
+        <entry key="..\:/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_phone.xml" value="0.1935" />
+        <entry key="..\:/dadn-cnpm/androidapp/app/src/main/res/layout/activity_forgot_password.xml" value="0.16847826086956522" />
+        <entry key="..\:/dadn-cnpm/androidapp/app/src/main/res/layout/activity_home_screen.xml" value="0.16847826086956522" />
+        <entry key="..\:/dadn-cnpm/androidapp/app/src/main/res/layout/activity_main.xml" value="0.14" />
+        <entry key="..\:/dadn-cnpm/androidapp/app/src/main/res/mipmap-anydpi-v26/ic_facebook_login.xml" value="0.1" />
       </map>
     </option>
   </component>
