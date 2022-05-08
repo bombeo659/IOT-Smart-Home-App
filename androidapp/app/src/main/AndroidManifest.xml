@@ -20,9 +20,6 @@
             android:name=".HomeNavigation"
             android:exported="false" />
         <activity
-            android:name=".HomeScreen"
-            android:exported="false" />
-        <activity
             android:name=".ForgotPassword"
             android:exported="false" />
         <activity
