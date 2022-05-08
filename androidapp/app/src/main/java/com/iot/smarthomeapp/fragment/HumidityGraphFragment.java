@@ -12,7 +12,7 @@ import android.widget.ImageView;
 
 import com.iot.smarthomeapp.R;
 
-public class GasGraphFragment extends Fragment {
+public class HumidityGraphFragment extends Fragment {
 
     private ImageView back;
 
@@ -20,7 +20,7 @@ public class GasGraphFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_gas_graph, container, false);
+        View view = inflater.inflate(R.layout.fragment_hunidity_graph, container, false);
 
         back = view.findViewById(R.id.back);
 
@@ -33,8 +33,8 @@ public class GasGraphFragment extends Fragment {
         return view;
     }
 
-    private void replaceFragment(Fragment fragment){
-        FragmentTransaction transaction =getActivity().getSupportFragmentManager().beginTransaction();
+    private void replaceFragment(Fragment fragment) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content_layout, fragment);
         transaction.commit();
     }

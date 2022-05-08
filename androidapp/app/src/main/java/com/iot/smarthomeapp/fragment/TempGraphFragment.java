@@ -1,66 +1,165 @@
 package com.iot.smarthomeapp.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.iot.smarthomeapp.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link TempGraphFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class TempGraphFragment extends Fragment {
+import java.util.ArrayList;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+public class TempGraphFragment extends Fragment implements OnChartGestureListener, OnChartValueSelectedListener {
 
-    public TempGraphFragment() {
-        // Required empty public constructor
-    }
+    private ImageView back;
+    private LineChart lineChart;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TempGraph.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static TempGraphFragment newInstance(String param1, String param2) {
-        TempGraphFragment fragment = new TempGraphFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_temp_graph, container, false);
+        View view = inflater.inflate(R.layout.fragment_temp_graph, container, false);
+
+        back = view.findViewById(R.id.back);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                replaceFragment(new HomeFragment());
+            }
+        });
+
+
+        lineChart = view.findViewById(R.id.tempChart);
+
+        lineChart.setOnChartGestureListener(this);
+        lineChart.setOnChartValueSelectedListener(this);
+        lineChart.setDragEnabled(true);
+        lineChart.setScaleEnabled(false);
+        lineChart.setBackgroundColor(Color.WHITE);
+
+        XAxis xAxis;
+        {   // // X-Axis Style // //
+            xAxis = lineChart.getXAxis();
+
+            // vertical grid lines
+            xAxis.enableGridDashedLine(10f, 10f, 0f);
+        }
+
+        YAxis yAxis;
+        {   // // Y-Axis Style // //
+            yAxis = lineChart.getAxisLeft();
+
+            // disable dual axis (only use LEFT axis)
+            lineChart.getAxisRight().setEnabled(false);
+
+            // horizontal grid lines
+            yAxis.enableGridDashedLine(10f, 10f, 0f);
+
+            // axis range
+            yAxis.setAxisMaximum(40f);
+            yAxis.setAxisMinimum(15f);
+        }
+
+        ArrayList<Entry> arrayList = new ArrayList<>();
+        arrayList.add(new Entry(0, 23f));
+        arrayList.add(new Entry(1, 24f));
+        arrayList.add(new Entry(2, 23f));
+        arrayList.add(new Entry(3, 22f));
+        arrayList.add(new Entry(4, 24f));
+        arrayList.add(new Entry(5, 25f));
+
+        LineDataSet lineDataSet = new LineDataSet(arrayList, "Dataset 1");
+        lineDataSet.setFillAlpha(110);
+        lineDataSet.setColor(Color.RED);
+        lineDataSet.setLineWidth(3f);
+        lineDataSet.setCircleRadius(6f);
+        lineDataSet.setValueTextSize(10f);
+
+
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+        dataSets.add(lineDataSet);
+
+        LineData lineData = new LineData(dataSets);
+
+        lineChart.setData(lineData);
+
+        return view;
+    }
+
+    private void replaceFragment(Fragment fragment) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.content_layout, fragment);
+        transaction.commit();
+    }
+
+    @Override
+    public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+    }
+
+    @Override
+    public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+    }
+
+    @Override
+    public void onChartLongPressed(MotionEvent me) {
+
+    }
+
+    @Override
+    public void onChartDoubleTapped(MotionEvent me) {
+
+    }
+
+    @Override
+    public void onChartSingleTapped(MotionEvent me) {
+
+    }
+
+    @Override
+    public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+
+    }
+
+    @Override
+    public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+
+    }
+
+    @Override
+    public void onChartTranslate(MotionEvent me, float dX, float dY) {
+
+    }
+
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+
+    }
+
+    @Override
+    public void onNothingSelected() {
+
     }
 }

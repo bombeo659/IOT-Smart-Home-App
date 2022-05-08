@@ -91,7 +91,7 @@ public class HomeFragment extends Fragment {
         humidity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                replaceFragment(new HunidityGraphFragment());
+                replaceFragment(new HumidityGraphFragment());
             }
         });
 
@@ -108,9 +108,6 @@ public class HomeFragment extends Fragment {
         getLastValue_Gas();
 
         return view;
-    }
-
-    private void getLastValue_Gas() {
     }
 
     private void replaceFragment(Fragment fragment){
@@ -263,4 +260,20 @@ public class HomeFragment extends Fragment {
         queue.add(request);
     }
 
+    private void getLastValue_Gas() {
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+        String url = "https://io.adafruit.com/api/v2/iotg06/feeds/bk-iot-gas/data?limit=1";
+
+        @SuppressLint("SetTextI18n")
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
+            try {
+                JSONObject info = response.getJSONObject(0);
+                data_gas.setProgress(Integer.parseInt(info.getString("value")));
+                int gas = Integer.parseInt(info.getString("value"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }, error -> Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show());
+        queue.add(request);
+    }
 }

@@ -48,7 +48,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     implementation 'com.github.lzyzsd:circleprogress:1.2.1'
-    implementation 'com.github.florent37:android-slidr:1.0.3'
+    implementation 'com.github.PhilJay:MPAndroidChart:3.1.0'
 
     implementation "androidx.core:core:1.7.0"
 
