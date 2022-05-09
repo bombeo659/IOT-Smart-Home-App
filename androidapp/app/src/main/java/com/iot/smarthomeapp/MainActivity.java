@@ -3,6 +3,7 @@ package com.iot.smarthomeapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.text.TextUtils;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,7 +36,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private CheckBox checkbox;
     private long backPressedTime;
     private Toast backToast;
-
+    public boolean check = false;
+    View view;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,11 +62,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         auth = FirebaseAuth.getInstance();
         String UserEmailKey = Paper.book().read(CurrentUser.UserEmailKey);
         String UserPasswordKey = Paper.book().read(CurrentUser.UserPasswordKey);
-
-        if(UserEmailKey != "" && UserPasswordKey != "" && checkbox.isChecked()) {
-            AllowAccess(UserEmailKey, UserPasswordKey);
+        if(UserEmailKey != "" && UserPasswordKey != "") {
+            if(!TextUtils.isEmpty(UserEmailKey) && !TextUtils.isEmpty(UserPasswordKey)) {
+                AllowAccess(UserEmailKey, UserPasswordKey);
+            }
         }
-        Log.w("check", UserEmailKey + UserPasswordKey);
     }
 
     @Override
@@ -133,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     if (user.isEmailVerified()){
                         if(checkbox.isChecked()) {
+                            check = true;
                             Paper.book().write(CurrentUser.UserEmailKey, email);
                             Paper.book().write(CurrentUser.UserPasswordKey, password);
                         }
