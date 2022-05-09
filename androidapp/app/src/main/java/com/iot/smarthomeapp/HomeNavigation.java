@@ -34,6 +34,8 @@ import com.iot.smarthomeapp.fragment.DevicesFragment;
 import com.iot.smarthomeapp.fragment.HomeFragment;
 import com.iot.smarthomeapp.fragment.SettingFragment;
 
+import io.paperdb.Paper;
+
 public class HomeNavigation extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
@@ -139,8 +141,7 @@ public class HomeNavigation extends AppCompatActivity implements NavigationView.
             break;
         case R.id.nav_logout:
             FirebaseAuth.getInstance().signOut();
-//            MainActivity mainActivity = new MainActivity();
-//            mainActivity.deletePaper();
+            Paper.book().destroy();
             startActivity(new Intent(HomeNavigation.this, MainActivity.class));
 
             break;
