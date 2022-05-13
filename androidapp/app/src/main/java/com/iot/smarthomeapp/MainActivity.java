@@ -68,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ImageView FBbtn = (ImageView) findViewById(R.id.facebook);
         FBbtn.setOnClickListener(this);
 
+        ImageView GGbtn = (ImageView) findViewById(R.id.google);
+        GGbtn.setOnClickListener(this);
+
         callbackManager = CallbackManager.Factory.create();
         checkbox = (CheckBox) findViewById(R.id.checkBox);
         Paper.init(this);
@@ -112,9 +115,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             loginUser();
             break;
         case R.id.facebook:
-            Intent intent = new Intent(MainActivity.this, FacebookLogin.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
+            Intent fb_intent = new Intent(MainActivity.this, FacebookLogin.class);
+            fb_intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(fb_intent);
+            break;
+        case R.id.google:
+            Intent gg_intent = new Intent(MainActivity.this, GoogleLogin.class);
+            //gg_intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(gg_intent);
             break;
         }
     }
@@ -173,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
-    
+
 
     private void AllowAccess(final String email, final String password) {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
