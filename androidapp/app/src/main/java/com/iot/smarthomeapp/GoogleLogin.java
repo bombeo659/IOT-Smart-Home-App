@@ -15,6 +15,10 @@ import com.google.android.gms.auth.api.identity.BeginSignInResult;
 import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.identity.SignInClient;
 import com.google.android.gms.auth.api.identity.SignInCredential;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -28,84 +32,94 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.annotations.Nullable;
 
 public class GoogleLogin extends MainActivity {
-    private SignInClient oneTapClient;
-    private BeginSignInRequest signInRequest;
-    private static final int REQ_ONE_TAP = 2;  // Can be any integer unique to the Activity.
-    private boolean showOneTapUI = true;
-    private FirebaseAuth mAuth;
+    GoogleSignInClient googleSignInClient;
+    FirebaseAuth firebaseAuth;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState,
-                         @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
-        mAuth = FirebaseAuth.getInstance();
-        oneTapClient = Identity.getSignInClient(this);
-        signInRequest = BeginSignInRequest.builder()
-                .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                        .setSupported(true)
-                        // Your server's client ID, not your Android client ID.
-                        .setServerClientId("421060695496-gssgkbn0d9b2qvft9ifun4bc9n0m6jg4.apps.googleusercontent.com")
-                        // Only show accounts previously used to sign in.
-                        .setFilterByAuthorizedAccounts(true)
-                        .build())
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        GoogleSignInOptions googleSignInOptions=new GoogleSignInOptions.Builder(
+                GoogleSignInOptions.DEFAULT_SIGN_IN
+        ).requestIdToken("421060695496-gssgkbn0d9b2qvft9ifun4bc9n0m6jg4.apps.googleusercontent.com")
+                .requestEmail()
                 .build();
-        oneTapClient.beginSignIn(signInRequest)
-                .addOnSuccessListener(this, new OnSuccessListener<BeginSignInResult>() {
-                    @Override
-                    public void onSuccess(BeginSignInResult result) {
-                        try {
-                            startIntentSenderForResult(
-                                    result.getPendingIntent().getIntentSender(), REQ_ONE_TAP,
-                                    null, 0, 0, 0);
-                        } catch (IntentSender.SendIntentException e) {
-
-                        }
-                    }
-                })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // No saved credentials found. Launch the One Tap sign-up flow, or
-                        // do nothing and continue presenting the signed-out UI.
-                    }
-                });
+        googleSignInClient = GoogleSignIn.getClient(GoogleLogin.this
+                ,googleSignInOptions);
+        Intent intent = googleSignInClient.getSignInIntent();
+        // Start activity for result
+        startActivityForResult(intent,100);
+        firebaseAuth=FirebaseAuth.getInstance();
+        // Initialize firebase user
+        FirebaseUser firebaseUser=firebaseAuth.getCurrentUser();
+        // Check condition
+        if(firebaseUser!=null)
+        {
+            // When user already sign in
+            // redirect to profile activity
+            startActivity(new Intent(GoogleLogin.this, HomeNavigation.class)
+                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // Check condition
+        if (requestCode == 100) {
+            // When request code is equal to 100
+            // Initialize task
+            Task<GoogleSignInAccount> signInAccountTask = GoogleSignIn
+                    .getSignedInAccountFromIntent(data);
 
-        switch (requestCode) {
-            case REQ_ONE_TAP:
+            // check condition
+            if (signInAccountTask.isSuccessful()) {
+                // When google sign in successful
+                // Initialize string
+                String s = "Google sign in successful";
+                // Display Toast
+                displayToast(s);
+                // Initialize sign in account
                 try {
-                    SignInCredential credential = oneTapClient.getSignInCredentialFromIntent(data);
-                    String idToken = credential.getGoogleIdToken();
-                    if (idToken !=  null) {
-                        // Got an ID token from Google. Use it to authenticate
-                        // with Firebase.
-                        AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(idToken, null);
-                        mAuth.signInWithCredential(firebaseCredential)
+                    // Initialize sign in account
+                    GoogleSignInAccount googleSignInAccount = signInAccountTask
+                            .getResult(ApiException.class);
+                    // Check condition
+                    if (googleSignInAccount != null) {
+                        // When sign in account is not equal to null
+                        // Initialize auth credential
+                        AuthCredential authCredential = GoogleAuthProvider
+                                .getCredential(googleSignInAccount.getIdToken()
+                                        , null);
+                        // Check credential
+                        firebaseAuth.signInWithCredential(authCredential)
                                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
+                                        // Check condition
                                         if (task.isSuccessful()) {
-                                            // Sign in success, update UI with the signed-in user's information
-                                            FirebaseUser user = mAuth.getCurrentUser();
-                                            Toast.makeText(GoogleLogin.this, "Login success",
-                                                    Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(GoogleLogin.this, HomeNavigation.class);
-                                            startActivity(intent);
+                                            // When task is successful
+                                            // Redirect to profile activity
+                                            startActivity(new Intent(GoogleLogin.this
+                                                    , HomeNavigation.class)
+                                                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                                            // Display Toast
+                                            displayToast("Firebase authentication successful");
                                         } else {
-                                            // If sign in fails, display a message to the user.
-                                            Toast.makeText(GoogleLogin.this, "Login fail",
-                                                    Toast.LENGTH_SHORT).show();
+                                            // When task is unsuccessful
+                                            // Display Toast
+                                            displayToast("Authentication Failed :" + task.getException()
+                                                    .getMessage());
                                         }
                                     }
                                 });
+
                     }
                 } catch (ApiException e) {
-                    // ...
+                    e.printStackTrace();
                 }
-                break;
+            }
         }
+    }
+    private void displayToast(String s) {
+        Toast.makeText(getApplicationContext(),s,Toast.LENGTH_SHORT).show();
     }
 }
