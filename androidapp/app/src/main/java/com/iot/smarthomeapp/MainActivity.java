@@ -12,10 +12,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -26,6 +31,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import com.facebook.CallbackManager;
+
+import java.util.Arrays;
 
 import io.paperdb.Paper;
 
@@ -38,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Toast backToast;
     public boolean check = false;
     View view;
+    CallbackManager callbackManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +65,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button loginButton = (Button) findViewById(R.id.loginButton);
         loginButton.setOnClickListener(this);
 
+        ImageView FBbtn = (ImageView) findViewById(R.id.facebook);
+        FBbtn.setOnClickListener(this);
+
+        callbackManager = CallbackManager.Factory.create();
         checkbox = (CheckBox) findViewById(R.id.checkBox);
         Paper.init(this);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -62,12 +76,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         auth = FirebaseAuth.getInstance();
         String UserEmailKey = Paper.book().read(CurrentUser.UserEmailKey);
         String UserPasswordKey = Paper.book().read(CurrentUser.UserPasswordKey);
-        if(UserEmailKey != "" && UserPasswordKey != "") {
-            if(!TextUtils.isEmpty(UserEmailKey) && !TextUtils.isEmpty(UserPasswordKey)) {
+        if (UserEmailKey != "" && UserPasswordKey != "") {
+            if (!TextUtils.isEmpty(UserEmailKey) && !TextUtils.isEmpty(UserPasswordKey)) {
                 AllowAccess(UserEmailKey, UserPasswordKey);
             }
         }
+
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -93,6 +110,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             break;
         case R.id.loginButton:
             loginUser();
+            break;
+        case R.id.facebook:
+            Intent intent = new Intent(MainActivity.this, FacebookLogin.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
             break;
         }
     }
@@ -150,10 +172,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 progressBar.setVisibility(View.GONE);
             }
         });
-
-
-
     }
+    
+
     private void AllowAccess(final String email, final String password) {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override

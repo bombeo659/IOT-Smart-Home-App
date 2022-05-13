@@ -22,4 +22,10 @@
     <string name="dining_room">DINING ROOM</string>
     <string name="bathroom">BATHROOM</string>
     <string name="bedroom">BEDROOM</string>
+
+
+    <string name="facebook_app_id">1386732058465504</string>
+    <string name="fb_login_protocol_scheme">fb1386732058465504</string>
+    <string name="facebook_client_token">e655e6921d8f56408ba1645ddd273ffe</string>
+
 </resources>
