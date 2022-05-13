@@ -1,4 +1,9 @@
 package com.iot.smarthomeapp;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.iot.smarthomeapp.MainActivity;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
@@ -54,14 +59,15 @@ public class HomeNavigation extends AppCompatActivity implements NavigationView.
     private FirebaseUser user;
     private DatabaseReference reference;
     private String userID;
-
+    GoogleSignInClient googleSignInClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_navigation);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        googleSignInClient= GoogleSignIn.getClient(HomeNavigation.this
+                , GoogleSignInOptions.DEFAULT_SIGN_IN);
         drawerLayout = findViewById(R.id.drawer_layout);
 
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
@@ -140,6 +146,14 @@ public class HomeNavigation extends AppCompatActivity implements NavigationView.
             }
             break;
         case R.id.nav_logout:
+            googleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful()) {
+                        FirebaseAuth.getInstance().signOut();
+                    }
+                }
+                });
             FirebaseAuth.getInstance().signOut();
             Paper.book().destroy();
             startActivity(new Intent(HomeNavigation.this, MainActivity.class));
