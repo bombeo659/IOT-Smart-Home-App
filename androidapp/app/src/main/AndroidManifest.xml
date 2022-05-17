@@ -35,6 +35,9 @@
             </intent-filter>
         </activity> <!-- Mqtt Service -->
         <service android:name="org.eclipse.paho.android.service.MqttService" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

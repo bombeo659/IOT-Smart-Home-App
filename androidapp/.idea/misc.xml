@@ -37,10 +37,11 @@
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/sw_thumb1.xml" value="0.1575" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/sw_track.xml" value="0.1575" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/sw_track1.xml" value="0.1575" />
+        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/font/averia_sans_libre.xml" value="0.19106529209621992" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/activity_forgot_password.xml" value="0.19453125" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/activity_home_navigation.xml" value="0.17291666666666666" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/activity_home_screen.xml" value="0.183984375" />
-        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/activity_main.xml" value="0.176" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/activity_register_user.xml" value="0.2" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/fragment_account.xml" value="0.17291666666666666" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/fragment_change_password.xml" value="0.17291666666666666" />
