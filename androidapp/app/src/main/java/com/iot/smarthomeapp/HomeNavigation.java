@@ -20,6 +20,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,6 +38,8 @@ import com.iot.smarthomeapp.fragment.ChangePasswordFragment;
 import com.iot.smarthomeapp.fragment.DevicesFragment;
 import com.iot.smarthomeapp.fragment.HomeFragment;
 import com.iot.smarthomeapp.fragment.SettingFragment;
+
+import io.paperdb.Paper;
 
 public class HomeNavigation extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -53,9 +60,14 @@ public class HomeNavigation extends AppCompatActivity implements NavigationView.
     private DatabaseReference reference;
     private String userID;
 
+    GoogleSignInClient googleSignInClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        googleSignInClient= GoogleSignIn.getClient(HomeNavigation.this, GoogleSignInOptions.DEFAULT_SIGN_IN);
+
         setContentView(R.layout.activity_home_navigation);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -138,6 +150,15 @@ public class HomeNavigation extends AppCompatActivity implements NavigationView.
             }
             break;
         case R.id.nav_logout:
+            googleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful()) {
+                        FirebaseAuth.getInstance().signOut();
+                    }
+                }
+            });
+            Paper.book().destroy();
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(HomeNavigation.this, MainActivity.class));
             break;

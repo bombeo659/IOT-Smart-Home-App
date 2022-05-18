@@ -17,6 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartHomeApp">
         <activity
+            android:name=".GoogleLogin"
+            android:exported="false" />
+        <activity
+            android:name=".FacebookLogin"
+            android:exported="false" />
+        <activity
             android:name=".HomeNavigation"
             android:exported="false" />
         <activity
@@ -35,6 +41,7 @@
             </intent-filter>
         </activity> <!-- Mqtt Service -->
         <service android:name="org.eclipse.paho.android.service.MqttService" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

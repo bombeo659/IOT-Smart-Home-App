@@ -52,4 +52,8 @@ dependencies {
 
     implementation "androidx.core:core:1.7.0"
 
+    implementation platform('com.google.firebase:firebase-bom:30.0.0')
+    implementation 'com.google.android.gms:play-services-auth:20.2.0'
+    implementation 'io.github.pilgr:paperdb:2.7.2'
+    implementation 'com.facebook.android:facebook-login:latest.release'
 }
