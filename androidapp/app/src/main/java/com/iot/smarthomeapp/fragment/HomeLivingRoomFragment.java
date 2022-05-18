@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -32,8 +33,10 @@ public class HomeLivingRoomFragment extends Fragment {
     MQTTHelper mqttHelper;
 
     private ImageView back;
-    private SwitchCompat switch_led, switch_pump;
+    private CardView ledCard, pumpCard;
     private ImageView led_image, pump_image;
+
+    private boolean ledDataCheck, pumpDataCheck;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,8 +53,8 @@ public class HomeLivingRoomFragment extends Fragment {
             }
         });
 
-        switch_led = view.findViewById(R.id.switch_led);
-        switch_pump = view.findViewById(R.id.switch_pump);
+        ledCard = view.findViewById(R.id.ledCard);
+        pumpCard = view.findViewById(R.id.pumpCard);
         led_image = view.findViewById(R.id.led_image);
         pump_image = view.findViewById(R.id.pump_image);
 
@@ -60,27 +63,32 @@ public class HomeLivingRoomFragment extends Fragment {
         getLastValue_Pump();
 
 
-        switch_led.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        ledCard.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
-                    mqttHelper.publishToTopic("iotg06/feeds/bk-iot-led", "1");
-                    led_image.setImageDrawable(getContext().getDrawable(R.drawable.ic_led_on));
-                }else {
+            public void onClick(View view) {
+                if(ledDataCheck){
+                    ledDataCheck = false;
                     mqttHelper.publishToTopic("iotg06/feeds/bk-iot-led", "0");
                     led_image.setImageDrawable(getContext().getDrawable(R.drawable.ic_led_off));
+                } else {
+                    ledDataCheck = true;
+                    mqttHelper.publishToTopic("iotg06/feeds/bk-iot-led", "1");
+                    led_image.setImageDrawable(getContext().getDrawable(R.drawable.ic_led_on));
                 }
             }
         });
-        switch_pump.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+        pumpCard.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
-                    mqttHelper.publishToTopic("iotg06/feeds/bk-iot-pump", "3");
-                    pump_image.setImageDrawable(getContext().getDrawable(R.drawable.ic_motor_on));
-                }else {
+            public void onClick(View view) {
+                if(pumpDataCheck){
+                    pumpDataCheck = false;
                     mqttHelper.publishToTopic("iotg06/feeds/bk-iot-pump", "2");
                     pump_image.setImageDrawable(getContext().getDrawable(R.drawable.ic_motor_off));
+                } else {
+                    pumpDataCheck = true;
+                    mqttHelper.publishToTopic("iotg06/feeds/bk-iot-pump", "3");
+                    pump_image.setImageDrawable(getContext().getDrawable(R.drawable.ic_motor_on));
                 }
             }
         });
@@ -119,7 +127,7 @@ public class HomeLivingRoomFragment extends Fragment {
         transaction.commit();
     }
 
-        private void getLastValue_Led(){
+    private void getLastValue_Led(){
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(getContext());
         String url = "https://io.adafruit.com/api/v2/iotg06/feeds/bk-iot-led/data?limit=1";
@@ -128,10 +136,10 @@ public class HomeLivingRoomFragment extends Fragment {
             try {
                 JSONObject info = response.getJSONObject(0);
                 if(info.getString("value").equals("1")){
-                    switch_led.setChecked(true);
+                    ledDataCheck = true;
                     led_image.setImageDrawable(getContext().getDrawable(R.drawable.ic_led_on));
                 } else{
-                    switch_led.setChecked(false);
+                    ledDataCheck = false;
                     led_image.setImageDrawable(getContext().getDrawable(R.drawable.ic_led_off));
                 }
             } catch (JSONException e) {
@@ -150,10 +158,10 @@ public class HomeLivingRoomFragment extends Fragment {
             try {
                 JSONObject info = response.getJSONObject(0);
                 if(info.getString("value").equals("3")){
-                    switch_pump.setChecked(true);
+                    pumpDataCheck = true;
                     pump_image.setImageDrawable(getContext().getDrawable(R.drawable.ic_motor_on));
                 } else{
-                    switch_pump.setChecked(false);
+                    pumpDataCheck = false;
                     pump_image.setImageDrawable(getContext().getDrawable(R.drawable.ic_motor_off));
                 }
             } catch (JSONException e) {

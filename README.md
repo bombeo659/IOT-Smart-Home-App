@@ -10,7 +10,7 @@
 
 ![app_singin](https://github.com/bombeo659/dadn-cnpm/blob/main/images/app_0.jpg)
 
-![app_signup](https://github.com/bombeo659/dadn-cnpm/blob/main/images/app_1.jpg)
+![app_signup](https://github.com/bombeo659/dadn-cnpm/blob/main/images/app_1.jpg)-->
 
-![app_home](https://github.com/bombeo659/dadn-cnpm/blob/main/images/app_2.jpg) -->
+![app_demo](https://github.com/bombeo659/dadn-cnpm/blob/main/images/app_demo.png) 
 

@@ -1,29 +1,17 @@
 package com.iot.smarthomeapp.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.cardview.widget.CardView;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +20,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.github.lzyzsd.circleprogress.ArcProgress;
-import com.iot.smarthomeapp.HomeScreen;
 import com.iot.smarthomeapp.MQTTHelper;
 import com.iot.smarthomeapp.R;
 
@@ -48,7 +35,6 @@ public class HomeFragment extends Fragment {
     MQTTHelper mqttHelper;
     private TextView data_temp, data_temp_check, data_humi, data_humi_check;
     private ArcProgress data_gas;
-    private CardView temp, humidity, gas, livingRoom, diningRoom, bathRoom, bedRoom;
 
     @Nullable
     @Override
@@ -62,13 +48,13 @@ public class HomeFragment extends Fragment {
         data_humi_check = view.findViewById(R.id.data_humidity_check);
         data_gas = view.findViewById(R.id.arc_progress);
 
-        temp = view.findViewById(R.id.temp);
-        humidity = view.findViewById(R.id.humidity);
-        gas = view.findViewById(R.id.gas);
-        livingRoom = view.findViewById(R.id.livingRoom);
-        diningRoom = view.findViewById(R.id.diningRoom);
-        bathRoom = view.findViewById(R.id.bathRoom);
-        bedRoom = view.findViewById(R.id.bedRoom);
+        CardView temp = view.findViewById(R.id.temp);
+        CardView humidity = view.findViewById(R.id.humidity);
+        CardView gas = view.findViewById(R.id.gas);
+        CardView livingRoom = view.findViewById(R.id.livingRoom);
+        CardView diningRoom = view.findViewById(R.id.diningRoom);
+        CardView bathRoom = view.findViewById(R.id.bathRoom);
+        CardView bedRoom = view.findViewById(R.id.bedRoom);
 
         livingRoom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,15 +81,33 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        temp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                replaceFragment(new TempGraphFragment());
+            }
+        });
+
+        humidity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                replaceFragment(new HumidityGraphFragment());
+            }
+        });
+
+        gas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                replaceFragment(new GasGraphFragment());
+            }
+        });
+
         StartMQTT();
         getLastValue_Temp();
         getLastValue_Humi();
         getLastValue_Gas();
 
         return view;
-    }
-
-    private void getLastValue_Gas() {
     }
 
     private void replaceFragment(Fragment fragment){
@@ -256,4 +260,20 @@ public class HomeFragment extends Fragment {
         queue.add(request);
     }
 
+    private void getLastValue_Gas() {
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+        String url = "https://io.adafruit.com/api/v2/iotg06/feeds/bk-iot-gas/data?limit=1";
+
+        @SuppressLint("SetTextI18n")
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
+            try {
+                JSONObject info = response.getJSONObject(0);
+                data_gas.setProgress(Integer.parseInt(info.getString("value")));
+                int gas = Integer.parseInt(info.getString("value"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }, error -> Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show());
+        queue.add(request);
+    }
 }
