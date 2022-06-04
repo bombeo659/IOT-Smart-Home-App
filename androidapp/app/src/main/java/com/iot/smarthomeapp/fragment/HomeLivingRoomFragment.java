@@ -3,7 +3,6 @@ package com.iot.smarthomeapp.fragment;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -11,8 +10,9 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -32,11 +32,11 @@ public class HomeLivingRoomFragment extends Fragment {
 
     MQTTHelper mqttHelper;
 
-    private ImageView back;
-    private CardView ledCard, pumpCard;
-    private ImageView led_image, pump_image;
+    private ImageView led_image, tv_image, ac_image;
+    private SeekBar seekBar;
+    private TextView tempData;
 
-    private boolean ledDataCheck, pumpDataCheck;
+    private boolean ledDataCheck, tvDataCheck, acDataCheck;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,7 +44,7 @@ public class HomeLivingRoomFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home_living_room, container, false);
 
-        back = view.findViewById(R.id.back);
+        ImageView back = view.findViewById(R.id.back);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,15 +53,39 @@ public class HomeLivingRoomFragment extends Fragment {
             }
         });
 
-        ledCard = view.findViewById(R.id.ledCard);
-        pumpCard = view.findViewById(R.id.pumpCard);
+        CardView ledCard = (CardView) view.findViewById(R.id.ledCard);
+        CardView tvCard = (CardView) view.findViewById(R.id.tvCard);
+        CardView acCard = (CardView) view.findViewById(R.id.acCard);
+
         led_image = view.findViewById(R.id.led_image);
-        pump_image = view.findViewById(R.id.pump_image);
+        tv_image = view.findViewById(R.id.tv_image);
+        ac_image = view.findViewById(R.id.ac_image);
+
+        tempData = view.findViewById(R.id.tempData);
+        seekBar = view.findViewById(R.id.seekBar);
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                tempData.setText(String.valueOf(progress)+"°C");
+                mqttHelper.publishToTopic("iotg06/feeds/bk-iot-temp", String.valueOf(progress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
         startMQTT();
         getLastValue_Led();
-        getLastValue_Pump();
-
+        getLastValue_Tv();
+        getLastValue_Temp();
 
         ledCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,21 +102,35 @@ public class HomeLivingRoomFragment extends Fragment {
             }
         });
 
-        pumpCard.setOnClickListener(new View.OnClickListener() {
+        tvCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(pumpDataCheck){
-                    pumpDataCheck = false;
-                    mqttHelper.publishToTopic("iotg06/feeds/bk-iot-pump", "2");
-                    pump_image.setImageDrawable(getContext().getDrawable(R.drawable.ic_motor_off));
+                if(tvDataCheck){
+                    tvDataCheck = false;
+                    mqttHelper.publishToTopic("iotg06/feeds/bk-iot-tv", "4");
+                    tv_image.setImageDrawable(getContext().getDrawable(R.drawable.ic_tv_off));
                 } else {
-                    pumpDataCheck = true;
-                    mqttHelper.publishToTopic("iotg06/feeds/bk-iot-pump", "3");
-                    pump_image.setImageDrawable(getContext().getDrawable(R.drawable.ic_motor_on));
+                    tvDataCheck = true;
+                    mqttHelper.publishToTopic("iotg06/feeds/bk-iot-tv", "5");
+                    tv_image.setImageDrawable(getContext().getDrawable(R.drawable.ic_tv_on));
                 }
             }
         });
 
+        acCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(acDataCheck){
+                    tvDataCheck = false;
+                    mqttHelper.publishToTopic("iotg06/feeds/bk-iot-ac", "6");
+                    ac_image.setImageDrawable(getContext().getDrawable(R.drawable.ic_air_conditioner_off));
+                } else {
+                    acDataCheck = true;
+                    mqttHelper.publishToTopic("iotg06/feeds/bk-iot-ac", "7");
+                    ac_image.setImageDrawable(getContext().getDrawable(R.drawable.ic_air_conditioner_on));
+                }
+            }
+        });
         return view;
     }
 
@@ -149,20 +187,60 @@ public class HomeLivingRoomFragment extends Fragment {
         queue.add(request);
     }
 
-    private void getLastValue_Pump(){
+    private void getLastValue_Tv(){
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(getContext());
-        String url = "https://io.adafruit.com/api/v2/iotg06/feeds/bk-iot-pump/data?limit=1";
+        String url = "https://io.adafruit.com/api/v2/iotg06/feeds/bk-iot-tv/data?limit=1";
         @SuppressLint("UseCompatLoadingForDrawables")
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
             try {
                 JSONObject info = response.getJSONObject(0);
-                if(info.getString("value").equals("3")){
-                    pumpDataCheck = true;
-                    pump_image.setImageDrawable(getContext().getDrawable(R.drawable.ic_motor_on));
+                if(info.getString("value").equals("5")){
+                    tvDataCheck = true;
+                    tv_image.setImageDrawable(getContext().getDrawable(R.drawable.ic_tv_on));
                 } else{
-                    pumpDataCheck = false;
-                    pump_image.setImageDrawable(getContext().getDrawable(R.drawable.ic_motor_off));
+                    tvDataCheck = false;
+                    tv_image.setImageDrawable(getContext().getDrawable(R.drawable.ic_tv_off));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }, error -> Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show());
+        queue.add(request);
+    }
+    private void getLastValue_Temp(){
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+        String url = "https://io.adafruit.com/api/v2/iotg06/feeds/bk-iot-temp/data?limit=1";
+
+        @SuppressLint("SetTextI18n")
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
+            try {
+                JSONObject info = response.getJSONObject(0);
+                tempData.setText(info.getString("value"));
+                int temp = Integer.parseInt(info.getString("value"));
+                seekBar.setProgress(temp);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }, error -> Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show());
+        queue.add(request);
+    }
+
+    private void getLastValue_Ac(){
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+        String url = "https://io.adafruit.com/api/v2/iotg06/feeds/bk-iot-ac/data?limit=1";
+        @SuppressLint("UseCompatLoadingForDrawables")
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
+            try {
+                JSONObject info = response.getJSONObject(0);
+                if(info.getString("value").equals("7")){
+                    acDataCheck = true;
+                    ac_image.setImageDrawable(getContext().getDrawable(R.drawable.ic_air_conditioner_on));
+                } else{
+                    acDataCheck = false;
+                    ac_image.setImageDrawable(getContext().getDrawable(R.drawable.ic_air_conditioner_off));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

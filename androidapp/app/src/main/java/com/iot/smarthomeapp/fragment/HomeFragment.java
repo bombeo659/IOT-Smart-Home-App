@@ -1,11 +1,20 @@
 package com.iot.smarthomeapp.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -20,6 +29,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.github.lzyzsd.circleprogress.ArcProgress;
+import com.iot.smarthomeapp.HomeNavigation;
 import com.iot.smarthomeapp.MQTTHelper;
 import com.iot.smarthomeapp.R;
 
@@ -28,6 +38,8 @@ import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Date;
 
 
 public class HomeFragment extends Fragment {
@@ -165,33 +177,9 @@ public class HomeFragment extends Fragment {
                 if(topic.contains("bk-iot-gas")){
                     int gas = Integer.parseInt(message.toString());
                     data_gas.setProgress(gas);
-                    //??????
-//                    if(gas>40){
-//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                            NotificationChannel channel = new NotificationChannel("myCh", "My Chanel", NotificationManager.IMPORTANCE_DEFAULT);
-//
-//                            NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
-//                            notificationManager.createNotificationChannel(channel);
-//                        }
-//                        Intent intent = new Intent(getContext(), HomeLivingRoomFragment.class);
-//                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                        PendingIntent pendingIntent = null;
-//                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-//                            pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
-//                        }
-//
-//                        NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), "myCh")
-//                                .setSmallIcon(R.drawable.ic_notification)
-//                                .setContentTitle("My notification")
-//                                .setContentText("Hello World!")
-//                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-//                                // Set the intent that will fire when the user taps the notification
-//                                .setContentIntent(pendingIntent)
-//                                .setAutoCancel(true);
-//
-//                        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
-//                        notificationManager.notify(0, builder.build());
-//                    }
+                    if(gas>40){
+                        sendNotification();
+                    }
                 }
             }
 
@@ -200,6 +188,40 @@ public class HomeFragment extends Fragment {
 
             }
         });
+    }
+
+    private void sendNotification() {
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("myCh", "My Chanel", NotificationManager.IMPORTANCE_DEFAULT);
+
+            NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        Intent intent = new Intent(getContext(), HomeNavigation.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), "myCh")
+                .setSmallIcon(R.drawable.ic_notification)
+                .setLargeIcon(bitmap)
+                .setContentTitle("GAS WARNING")
+                .setContentText("Gas concentration is high!")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
+        notificationManager.notify(getNotificationId(), builder.build());
+    }
+
+    private int getNotificationId(){
+        return (int) new Date().getTime();
     }
 
     private void getLastValue_Temp(){
@@ -270,6 +292,9 @@ public class HomeFragment extends Fragment {
                 JSONObject info = response.getJSONObject(0);
                 data_gas.setProgress(Integer.parseInt(info.getString("value")));
                 int gas = Integer.parseInt(info.getString("value"));
+                if(gas>40){
+                    sendNotification();
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
