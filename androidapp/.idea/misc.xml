@@ -6,6 +6,7 @@
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1575" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/background_home.xml" value="0.127" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/circle.xml" value="0.1575" />
+        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/cricle_shape.xml" value="0.1635" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/custom_bar.xml" value="0.127" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/custom_btn.xml" value="0.127" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/custom_input.xml" value="0.127" />
@@ -17,6 +18,8 @@
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_back.xml" value="0.1635" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_bathroom.xml" value="0.1635" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_bedroom.xml" value="0.1635" />
+        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_circle_oval.xml" value="0.1635" />
+        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_circumference_circle.xml" value="0.1635" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_devices.xml" value="0.1735" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_diningroom.xml" value="0.1635" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/ic_humidity.xml" value="0.1575" />
@@ -38,6 +41,7 @@
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/sw_track.xml" value="0.1575" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/drawable/sw_track1.xml" value="0.1575" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/font/averia_sans_libre.xml" value="0.19106529209621992" />
+        <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout-v26/fragment_home_living_room.xml" value="0.23007246376811594" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/activity_forgot_password.xml" value="0.19453125" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/activity_google_login.xml" value="0.16354166666666667" />
         <entry key="..\:/VScode/VScode_Python/dadn-cnpm/androidapp/app/src/main/res/layout/activity_home_navigation.xml" value="0.17291666666666666" />
