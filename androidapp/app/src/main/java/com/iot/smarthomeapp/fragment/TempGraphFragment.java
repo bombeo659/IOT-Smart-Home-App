@@ -52,6 +52,8 @@ public class TempGraphFragment extends Fragment implements OnChartGestureListene
 
         lineChart = view.findViewById(R.id.tempChart);
 
+        lineChart.getDescription().setEnabled(true);
+        lineChart.getDescription().setText("Temperature Log");
         lineChart.setOnChartGestureListener(this);
         lineChart.setOnChartValueSelectedListener(this);
         lineChart.setDragEnabled(true);
@@ -89,7 +91,7 @@ public class TempGraphFragment extends Fragment implements OnChartGestureListene
         arrayList.add(new Entry(4, 24f));
         arrayList.add(new Entry(5, 25f));
 
-        LineDataSet lineDataSet = new LineDataSet(arrayList, "Dataset 1");
+        LineDataSet lineDataSet = new LineDataSet(arrayList, "Temp");
         lineDataSet.setFillAlpha(110);
         lineDataSet.setColor(Color.RED);
         lineDataSet.setLineWidth(3f);
