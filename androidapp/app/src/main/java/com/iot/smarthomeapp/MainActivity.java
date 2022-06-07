@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         googleButton.setOnClickListener(this);
 
         callbackManager = CallbackManager.Factory.create();
+
         checkbox = (CheckBox) findViewById(R.id.checkBox);
         Paper.init(this);
 

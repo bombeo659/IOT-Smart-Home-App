@@ -3,11 +3,11 @@ import time
 import sys
 from Adafruit_IO import MQTTClient
 
-AIO_FEED_IDS = ["bk-iot-led", "bk-iot-pump"]
+AIO_FEED_IDS = ["bk-iot-led", "bk-iot-tv", "bk-iot-ac", "bk-iot-pump"]
 
 
 AIO_USERNAME = "iotg06"
-AIO_KEY = ""
+AIO_KEY = "aio_Vnwm12ZcLwR8Bsflg0qhex0T9YYX"
 
 
 def connected(client):
@@ -28,9 +28,9 @@ def disconnected(client):
 def message(client, feed_id, payload):
     print("Nhan du lieu tu " + feed_id + ": " + payload)
     if isMicrobitConnected:
-        # ser.write(("feed: " + feed_id + " send: " +
-        #           str(payload) + "#\n").encode())
-        ser.write((str(payload) + "#\n").encode())
+        ser.write(("feed: " + feed_id + " send: " +
+                  str(payload) + "#\n").encode())
+        # ser.write((str(payload) + "#\n").encode())
 
 
 client = MQTTClient(AIO_USERNAME, AIO_KEY)

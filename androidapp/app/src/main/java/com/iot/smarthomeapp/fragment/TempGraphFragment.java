@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -23,7 +24,12 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.iot.smarthomeapp.MQTTHelper;
 import com.iot.smarthomeapp.R;
+
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.ArrayList;
 
@@ -31,7 +37,11 @@ import java.util.ArrayList;
 public class TempGraphFragment extends Fragment implements OnChartGestureListener, OnChartValueSelectedListener {
 
     private ImageView back;
-    private LineChart lineChart;
+    private LineChart graphTemp;
+    private MQTTHelper mqttHelper;
+
+    private boolean flagGraphTemp = false;
+    private int tempAddToGraph;
 
 
     @Override
@@ -40,6 +50,7 @@ public class TempGraphFragment extends Fragment implements OnChartGestureListene
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_temp_graph, container, false);
 
+        startMQTT();
         back = view.findViewById(R.id.back);
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -50,61 +61,129 @@ public class TempGraphFragment extends Fragment implements OnChartGestureListene
         });
 
 
-        lineChart = view.findViewById(R.id.tempChart);
+        graphTemp = view.findViewById(R.id.tempChart);
 
-        lineChart.setOnChartGestureListener(this);
-        lineChart.setOnChartValueSelectedListener(this);
-        lineChart.setDragEnabled(true);
-        lineChart.setScaleEnabled(false);
-        lineChart.setBackgroundColor(Color.WHITE);
+        graphTemp.getDescription().setEnabled(true);
+        graphTemp.getDescription().setText("Temperature Log");
+        graphTemp.setNoDataText("No data for the moment");
 
-        XAxis xAxis;
-        {   // // X-Axis Style // //
-            xAxis = lineChart.getXAxis();
+        graphTemp.setHighlightPerDragEnabled(true);
+        graphTemp.setTouchEnabled(true);
 
-            // vertical grid lines
-            xAxis.enableGridDashedLine(10f, 10f, 0f);
-        }
+        graphTemp.setDragEnabled(true);
+        graphTemp.setScaleEnabled(true);
+        graphTemp.setDrawGridBackground(false);
 
-        YAxis yAxis;
-        {   // // Y-Axis Style // //
-            yAxis = lineChart.getAxisLeft();
+        graphTemp.setPinchZoom(true);
+        graphTemp.setBackgroundColor(Color.WHITE);
 
-            // disable dual axis (only use LEFT axis)
-            lineChart.getAxisRight().setEnabled(false);
+        LineData data = new LineData();
+        data.setValueTextColor(Color.BLACK);
 
-            // horizontal grid lines
-            yAxis.enableGridDashedLine(10f, 10f, 0f);
+        graphTemp.setData(data);
 
-            // axis range
-            yAxis.setAxisMaximum(40f);
-            yAxis.setAxisMinimum(15f);
-        }
+        Legend l = graphTemp.getLegend();
 
-        ArrayList<Entry> arrayList = new ArrayList<>();
-        arrayList.add(new Entry(0, 23f));
-        arrayList.add(new Entry(1, 24f));
-        arrayList.add(new Entry(2, 23f));
-        arrayList.add(new Entry(3, 22f));
-        arrayList.add(new Entry(4, 24f));
-        arrayList.add(new Entry(5, 25f));
+        l.setForm(Legend.LegendForm.LINE);
+        l.setTextColor(Color.BLACK);
 
-        LineDataSet lineDataSet = new LineDataSet(arrayList, "Dataset 1");
-        lineDataSet.setFillAlpha(110);
-        lineDataSet.setColor(Color.RED);
-        lineDataSet.setLineWidth(3f);
-        lineDataSet.setCircleRadius(6f);
-        lineDataSet.setValueTextSize(10f);
+        XAxis xl = graphTemp.getXAxis();
+        xl.setTextColor(Color.BLACK);
+        xl.setDrawGridLines(false);
+        xl.setAvoidFirstLastClipping(true);
+        xl.setEnabled(true);
 
 
-        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(lineDataSet);
+        YAxis leftAxis = graphTemp.getAxisLeft();
+        leftAxis.setTextColor(Color.BLACK);
+        leftAxis.setAxisMaximum(30f);
+        leftAxis.setAxisMinimum(-5f);
+        leftAxis.setDrawGridLines(true);
+        leftAxis.setGridColor(Color.BLACK);
 
-        LineData lineData = new LineData(dataSets);
+        YAxis rightAxis = graphTemp.getAxisRight();
+        rightAxis.setEnabled(false);
 
-        lineChart.setData(lineData);
+//        lineChart.getDescription().setEnabled(true);
+//        lineChart.getDescription().setText("Temperature Log");
+//        lineChart.setOnChartGestureListener(this);
+//        lineChart.setOnChartValueSelectedListener(this);
+//        lineChart.setDragEnabled(true);
+//        lineChart.setScaleEnabled(false);
+//        lineChart.setBackgroundColor(Color.WHITE);
+//
+//        XAxis xAxis;
+//        {   // // X-Axis Style // //
+//            xAxis = lineChart.getXAxis();
+//
+//            // vertical grid lines
+//            xAxis.enableGridDashedLine(10f, 10f, 0f);
+//        }
+//
+//        YAxis yAxis;
+//        {   // // Y-Axis Style // //
+//            yAxis = lineChart.getAxisLeft();
+//
+//            // disable dual axis (only use LEFT axis)
+//            lineChart.getAxisRight().setEnabled(false);
+//
+//            // horizontal grid lines
+//            yAxis.enableGridDashedLine(10f, 10f, 0f);
+//
+//            // axis range
+//            yAxis.setAxisMaximum(40f);
+//            yAxis.setAxisMinimum(15f);
+//        }
+//
+//        ArrayList<Entry> arrayList = new ArrayList<>();
+//        arrayList.add(new Entry(0, 23f));
+//        arrayList.add(new Entry(1, 24f));
+//        arrayList.add(new Entry(2, 23f));
+//        arrayList.add(new Entry(3, 22f));
+//        arrayList.add(new Entry(4, 24f));
+//        arrayList.add(new Entry(5, 25f));
+//
+//        LineDataSet lineDataSet = new LineDataSet(arrayList, "Dataset 1");
+//        lineDataSet.setFillAlpha(110);
+//        lineDataSet.setColor(Color.RED);
+//        lineDataSet.setLineWidth(3f);
+//        lineDataSet.setCircleRadius(6f);
+//        lineDataSet.setValueTextSize(10f);
+//
+//
+//        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+//        dataSets.add(lineDataSet);
+//
+//        LineData lineData = new LineData(dataSets);
+//
+//        lineChart.setData(lineData);
 
         return view;
+    }
+
+    private void startMQTT() {
+        mqttHelper = new MQTTHelper(getContext(), "group10");
+        mqttHelper.setCallback(new MqttCallbackExtended() {
+            @Override
+            public void connectComplete(boolean reconnect, String serverURI) {
+
+            }
+
+            @Override
+            public void connectionLost(Throwable cause) {
+
+            }
+
+            @Override
+            public void messageArrived(String topic, MqttMessage message) throws Exception {
+
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+
+            }
+        });
     }
 
     private void replaceFragment(Fragment fragment) {
@@ -161,5 +240,80 @@ public class TempGraphFragment extends Fragment implements OnChartGestureListene
     @Override
     public void onNothingSelected() {
 
+    }
+
+    public final void runOnUiThread (Runnable action){
+
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    if (!flagGraphTemp) {
+                        try {
+                            Thread.sleep(10);
+                        } catch (InterruptedException e) {
+
+                        }
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (flagGraphTemp) {
+                                    addEntryToTempGraph();
+                                    flagGraphTemp = false;
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        }).start();
+    }
+    private LineDataSet createSetTemp() {
+        LineDataSet set = new LineDataSet(null, "Temperature waves");
+        set.setDrawCircles(true);
+        set.setCubicIntensity(0.2f);
+        set.setAxisDependency(YAxis.AxisDependency.LEFT);
+        set.setColor(Color.GREEN);
+        set.setCircleColor(Color.MAGENTA);
+        set.setLineWidth(2.5f);
+        set.setCircleRadius(3f);
+        set.setFillAlpha(65);
+        set.setFillColor(Color.GREEN);
+        set.setHighLightColor(Color.rgb(244, 117, 117));
+        set.setValueTextColor(Color.MAGENTA);
+        set.setValueTextSize(10f);
+        set.setDrawValues(true);
+        return set;
+    }
+    private void addEntryToTempGraph() {
+
+        LineData data = graphTemp.getData();
+
+        if (data != null) {
+
+            ILineDataSet set = data.getDataSetByIndex(0);
+
+            if (set == null) {
+                set = createSetTemp();
+                data.addDataSet(set);
+            }
+            data.addEntry(new Entry(set.getEntryCount(), tempAddToGraph), 0);
+            data.notifyDataChanged();
+
+            // let the graph know it's data has changed
+            graphTemp.notifyDataSetChanged();
+
+            // limit the number of visible entries
+            graphTemp.setVisibleXRangeMaximum(5);
+
+            // move to the latest entry
+            graphTemp.moveViewToX(data.getEntryCount());
+
+        }
     }
 }
